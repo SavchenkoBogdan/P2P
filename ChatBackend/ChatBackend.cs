@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 
 namespace ChatBackend
 {
@@ -15,17 +17,6 @@ namespace ChatBackend
 
         DisplayMessageDelegate _displayMessageDelegate = null;
 
-        /// <summary>
-        /// The default constructor is only here for testing purposes.
-        /// </summary>
-        private ChatBackend()
-        {
-        }
-
-        /// <summary>
-        /// ChatBackend constructor should be called with a delegate that is capable of displaying messages.
-        /// </summary>
-        /// <param name="dmd">DisplayMessageDelegate</param>
         public ChatBackend(DisplayMessageDelegate dmd)
         {
             _displayMessageDelegate = dmd;
@@ -72,7 +63,6 @@ namespace ChatBackend
             }
             else
             {
-                // In order to send a message, we call our friends' DisplayMessage method
                 _channel.DisplayMessage(new CompositeType(_myUserName, text));
             }
         }
@@ -81,17 +71,14 @@ namespace ChatBackend
         {
             host = new ServiceHost(this);
             host.Open();
+
             channelFactory = new ChannelFactory<IChatBackend>("ChatEndpoint");
             _channel = channelFactory.CreateChannel();
-
-            // Information to send to the channel
             _channel.DisplayMessage(new CompositeType("Event", _myUserName + " has entered the conversation."));
-
-            // Information to display locally
             _displayMessageDelegate(new CompositeType("Info", "To change your name, type setname: NEW_NAME"));
         }
 
-        private void StopService()
+        public void StopService()
         {
             if (host != null)
             {

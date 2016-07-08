@@ -26,7 +26,13 @@ namespace P2P
         public MainWindow()
         {
             InitializeComponent();
+            this.Closed += MainWindow_Closed;
             _backend = new ChatBackend.ChatBackend(this.DisplayMessage);
+        }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            _backend.StopService();
         }
 
         public void DisplayMessage(ChatBackend.CompositeType composite)
