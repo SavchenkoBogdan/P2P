@@ -15,14 +15,34 @@ using System.Windows.Shapes;
 
 namespace P2P
 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ChatBackend.ChatBackend _backend;
+
         public MainWindow()
         {
             InitializeComponent();
+            _backend = new ChatBackend.ChatBackend(this.DisplayMessage);
+        }
+
+        public void DisplayMessage(ChatBackend.CompositeType composite)
+        {
+            string username = composite.Username == null ? "" : composite.Username;
+            string message = composite.Message == null ? "" : composite.Message;
+            textBoxChatPane.Text += (username + ": " + message + Environment.NewLine);
+        }
+
+        private void textBoxEntryField_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return || e.Key == Key.Enter)
+            {
+                _backend.SendMessage(textBoxEntryField.Text);
+                textBoxEntryField.Clear();
+            }
         }
     }
 }
