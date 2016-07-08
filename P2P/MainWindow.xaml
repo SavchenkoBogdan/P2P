@@ -7,11 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="35*" />
-            <RowDefinition Height="35" />
-        </Grid.RowDefinitions>
-        <TextBox Height="Auto" HorizontalAlignment="Stretch" Margin="6,6,6,6" Name="textBoxChatPane" VerticalAlignment="Stretch" Width="Auto" Grid.Row="0" />
-        <TextBox Height="23" HorizontalAlignment="Stretch" Margin="6,6,6,6" Name="textBoxEntryField" VerticalAlignment="Stretch" Width="Auto" Grid.Row="1" KeyDown="textBoxEntryField_KeyDown" />
+
+        <TextBox Height="Auto" HorizontalAlignment="Stretch" Margin="341,10,10,174" Name="textBoxChatPane" VerticalAlignment="Stretch" Width="Auto" Grid.Row="0" />
+        <TextBox HorizontalAlignment="Stretch" Margin="341,145,6,150" Name="textBoxEntryField" VerticalAlignment="Stretch" Width="Auto" KeyDown="textBoxEntryField_KeyDown" />
+        <Canvas Name ="paintSurface" HorizontalAlignment="Left" Height="213" Margin="10,10,0,0" VerticalAlignment="Top" Width="249" MouseDown="UIElement_OnMouseDown" MouseUp="UIElement_OnMouseUp" MouseMove="UIElement_OnMouseMove">
+            <Canvas.Background>
+                <SolidColorBrush Color="WhiteSmoke" Opacity="0"/>
+            </Canvas.Background>
+        </Canvas>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="10,241,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="120" TextChanged="TextBox_OnTextChanged"/>
+        <Button x:Name="button" Content="Clear" HorizontalAlignment="Left" Margin="158,241,0,0" VerticalAlignment="Top" Width="75" Click="btnClear_Click"/>
     </Grid>
 </Window>

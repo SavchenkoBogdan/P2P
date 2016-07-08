@@ -16,10 +16,12 @@ namespace ChatBackend
         #region Everything we need to receive messages
 
         DisplayMessageDelegate _displayMessageDelegate = null;
+        UpdateCanvasDelegate _updateCanvasDelegate = null;
 
-        public ChatBackend(DisplayMessageDelegate dmd)
+        public ChatBackend(DisplayMessageDelegate dmd, UpdateCanvasDelegate ucd)
         {
             _displayMessageDelegate = dmd;
+            _updateCanvasDelegate = ucd;
             StartService();
         }
 
@@ -39,6 +41,12 @@ namespace ChatBackend
             {
                 _displayMessageDelegate(composite);
             }
+        }
+
+        public void UpdateCanvas(ImageType data)
+        {
+            if (_updateCanvasDelegate != null && data.Username != _myUserName)
+                _updateCanvasDelegate.Invoke(data);
         }
 
         #endregion // Everything we need to receive messages
@@ -67,11 +75,19 @@ namespace ChatBackend
             }
         }
 
+        public void SendMessage(Command cmd)
+        {
+            _channel.UpdateCanvas(new ImageType(_myUserName, cmd));
+        }
+
         private void StartService()
         {
             host = new ServiceHost(this);
             host.Open();
 
+            Thread.Sleep(1000);
+            _myUserName += new Random().Next(0, 100000000);
+            var a = 5f;
             channelFactory = new ChannelFactory<IChatBackend>("ChatEndpoint");
             _channel = channelFactory.CreateChannel();
             _channel.DisplayMessage(new CompositeType("Event", _myUserName + " has entered the conversation."));
